@@ -34,9 +34,8 @@ function applyMarkerStyles(el: HTMLDivElement, isSelected: boolean, priceLabel: 
     'font-size: 12px',
     'font-weight: 700',
     'color: #ffffff',
-    'box-shadow: 0 2px 6px rgba(0,0,0,0.2)',
-    `background-color: ${isSelected ? '#15803d' : '#16a34a'}`,
-    `transform: ${isSelected ? 'scale(1.15)' : 'scale(1)'}`,
+    `background-color: ${isSelected ? '#448383' : '#16a34a'}`,
+    `transform: ${isSelected ? 'scale(1.12)' : 'scale(1)'}`,
     'transition: transform 0.15s ease, background-color 0.15s ease',
     'white-space: nowrap',
   ].join('; ')
@@ -258,7 +257,7 @@ export default function ConsumerDashboard() {
 
   const mapCol: CSSProperties = {
     position: 'relative', width: '58%',
-    height: '100%', backgroundColor: '#e5e7eb',
+    height: '100%', backgroundColor: '#D3E5CB',
   }
 
   const mapInner: CSSProperties = {
@@ -269,14 +268,14 @@ export default function ConsumerDashboard() {
   const listCol: CSSProperties = {
     width: '42%', height: '100%',
     display: 'flex', flexDirection: 'column',
-    overflow: 'hidden', backgroundColor: '#fff',
-    borderLeft: '1px solid #e5e7eb',
+    overflow: 'hidden', backgroundColor: '#ffffff',
+    borderLeft: '1px solid #8BD4B9',
   }
 
   const stickyHeader: CSSProperties = {
-    position: 'sticky', top: 0, backgroundColor: '#fff',
+    position: 'sticky', top: 0, backgroundColor: '#ffffff',
     zIndex: 10, padding: '16px',
-    borderBottom: '1px solid #f3f4f6', flexShrink: 0,
+    borderBottom: '1px solid #8BD4B9', flexShrink: 0,
   }
 
   const listScroll: CSSProperties = {
@@ -284,15 +283,18 @@ export default function ConsumerDashboard() {
   }
 
   const cardBase: CSSProperties = {
-    backgroundColor: '#fff', borderRadius: '12px',
-    border: '1px solid #e5e7eb', padding: '16px',
-    marginBottom: '12px', cursor: 'pointer', boxSizing: 'border-box',
+    backgroundColor: '#fefce8',
+    borderRadius: '16px',
+    border: 'none',
+    padding: '16px 20px',
+    marginBottom: '10px',
+    cursor: 'pointer',
+    boxSizing: 'border-box',
   }
 
   const cardSelected: CSSProperties = {
     ...cardBase,
-    border: '2px solid #16a34a',
-    boxShadow: '0 0 0 3px rgba(22,163,74,0.15)',
+    border: '2px solid #448383',
   }
 
   return (
@@ -303,7 +305,7 @@ export default function ConsumerDashboard() {
         {mounted && <div ref={mapContainerRef} style={mapInner} />}
         {!mounted && (
           <div style={{ ...mapInner, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <p style={{ color: '#9ca3af', fontSize: '14px' }}>Loading map...</p>
+            <p style={{ color: '#62B794', fontSize: '14px' }}>Loading map...</p>
           </div>
         )}
       </div>
@@ -311,30 +313,30 @@ export default function ConsumerDashboard() {
       {/* Listings */}
       <div style={listCol}>
         <header style={stickyHeader}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-            <div>
-              <div style={{ fontSize: '16px', fontWeight: 600, color: '#111827' }}>
-                Hey, {profile?.name ?? 'Converter'} 👋
-              </div>
-              <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>
-                {listings.length} listing{listings.length !== 1 ? 's' : ''} available
-              </div>
-            </div>
-            <Link
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <Link href="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
+          <img src="/logo.png" alt="Reflo" style={{ width: '52px', height: '52px', borderRadius: '50%', cursor: 'pointer' }} />
+          </Link>             <Link
               href="/consumer/orders"
-              style={{ fontSize: '14px', fontWeight: 600, color: '#16a34a', textDecoration: 'none', whiteSpace: 'nowrap' }}
+              style={{ fontSize: '14px', fontWeight: 700, color: '#448383', textDecoration: 'none', whiteSpace: 'nowrap', textTransform: 'uppercase' }}
             >
               Orders →
             </Link>
           </div>
+          <div style={{ fontSize: '20px', fontWeight: 700, color: '#448383' }}>
+            Hey, {profile?.name ?? 'Converter'} 👋
+          </div>
+          <div style={{ fontSize: '14px', color: '#62B794', marginTop: '4px' }}>
+            {listings.length} listing{listings.length !== 1 ? 's' : ''} available
+          </div>
         </header>
 
         <div style={listScroll}>
-          {loading && <p style={{ color: '#9ca3af', fontSize: '14px' }}>Loading listings...</p>}
+          {loading && <p style={{ color: '#62B794', fontSize: '14px' }}>Loading listings...</p>}
 
           {!loading && listings.length === 0 && (
-            <div style={{ textAlign: 'center', color: '#9ca3af', padding: '60px 0' }}>
-              <p style={{ fontSize: '18px', margin: '0 0 8px' }}>No active listings</p>
+            <div style={{ textAlign: 'center', color: '#62B794', padding: '60px 0' }}>
+              <p style={{ fontSize: '18px', margin: '0 0 8px', color: '#448383' }}>No active listings</p>
               <p style={{ fontSize: '14px', margin: 0 }}>Check back soon</p>
             </div>
           )}
@@ -353,34 +355,33 @@ export default function ConsumerDashboard() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
                   <div style={{ minWidth: 0 }}>
-                    <p style={{ fontWeight: 600, color: '#111827', margin: 0 }}>
+                    <p style={{ fontWeight: 700, color: '#448383', margin: 0, fontSize: '16px' }}>
                       {listing.volume_litres}L of used oil
                     </p>
-                    <p style={{ fontSize: '14px', color: '#6b7280', margin: '4px 0 0' }}>
+                    <p style={{ fontSize: '14px', color: '#62B794', margin: '4px 0 0' }}>
                       {listing.address}
                     </p>
                     {rstats ? (
-                      <p style={{ fontSize: '13px', color: '#d97706', margin: '4px 0 0' }}>
-                        ★ {rstats.avg.toFixed(1)}{' '}
-                        <span style={{ color: '#b45309' }}>({rstats.count} reviews)</span>
+                      <p style={{ fontSize: '13px', color: '#62B794', margin: '4px 0 0' }}>
+                        <span style={{ color: '#E5B923' }}>★</span> {rstats.avg.toFixed(1)}{' '}
+                        <span>({rstats.count} reviews)</span>
                       </p>
                     ) : (
-                      <p style={{ fontSize: '13px', color: '#9ca3af', margin: '4px 0 0' }}>No reviews yet</p>
+                      <p style={{ fontSize: '13px', color: '#62B794', margin: '4px 0 0' }}>No reviews yet</p>
                     )}
-                    <p style={{ fontSize: '13px', color: '#9ca3af', margin: '4px 0 0' }}>
+                    <p style={{ fontSize: '13px', color: '#62B794', margin: '4px 0 0' }}>
                       Available: {new Date(listing.available_at).toLocaleDateString()}
                     </p>
                     {listing.notes && (
-                      <p style={{ fontSize: '13px', color: '#9ca3af', margin: '4px 0 0', fontStyle: 'italic' }}>
+                      <p style={{ fontSize: '13px', color: '#62B794', margin: '4px 0 0', fontStyle: 'italic' }}>
                         {listing.notes}
                       </p>
                     )}
                   </div>
                   <div style={{ flexShrink: 0, textAlign: 'right' }}>
-                    <p style={{ fontWeight: 700, fontSize: '15px', color: '#16a34a', margin: 0 }}>
+                    <p style={{ fontWeight: 700, fontSize: '18px', color: '#448383', margin: 0 }}>
                       ${pricing.consumerTotal.toFixed(2)}
                     </p>
-                    <p style={{ fontSize: '11px', color: '#9ca3af', margin: '2px 0 0' }}>pickup price</p>
                   </div>
                 </div>
 
@@ -389,10 +390,16 @@ export default function ConsumerDashboard() {
                     type="button"
                     onClick={(e) => { e.stopPropagation(); setClaimModalOpen(true) }}
                     style={{
-                      marginTop: '12px', width: '100%', border: 'none',
-                      borderRadius: '8px', backgroundColor: '#16a34a',
-                      color: '#fff', fontSize: '14px', fontWeight: 600,
-                      padding: '10px 16px', cursor: 'pointer',
+                      marginTop: '12px',
+                      width: '100%',
+                      border: 'none',
+                      borderRadius: '9999px',
+                      backgroundColor: '#448383',
+                      color: '#ffffff',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      padding: '12px 16px',
+                      cursor: 'pointer',
                     }}
                   >
                     Claim this listing →
@@ -411,38 +418,38 @@ export default function ConsumerDashboard() {
           <div
             style={{
               position: 'fixed', inset: 0, zIndex: 50,
-              background: 'rgba(0,0,0,0.4)',
+              background: 'rgba(68, 131, 131, 0.25)',
               display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
             }}
             onClick={() => setClaimModalOpen(false)}
           >
             <div
               style={{
-                width: '100%', maxWidth: '520px', background: '#fff',
+                width: '100%', maxWidth: '520px', background: '#ffffff',
                 borderRadius: '20px 20px 0 0', padding: '24px',
                 maxHeight: '90vh', overflowY: 'auto',
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#111827', margin: '0 0 4px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#448383', margin: '0 0 4px' }}>
                 Claim this listing
               </h2>
-              <p style={{ fontSize: '14px', color: '#6b7280', margin: '0 0 20px' }}>
+              <p style={{ fontSize: '14px', color: '#62B794', margin: '0 0 20px' }}>
                 {selected.address} · {selected.volume_litres}L
               </p>
 
-              <div style={{ background: '#f9fafb', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
+              <div style={{ background: '#fefce8', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '14px', color: '#6b7280' }}>Oil value</span>
-                  <span style={{ fontSize: '14px', color: '#111827' }}>${pricing.oilValueTotal.toFixed(2)}</span>
+                  <span style={{ fontSize: '14px', color: '#62B794' }}>Oil value</span>
+                  <span style={{ fontSize: '14px', color: '#448383' }}>${pricing.oilValueTotal.toFixed(2)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '14px', color: '#6b7280' }}>Service fee (5%)</span>
-                  <span style={{ fontSize: '14px', color: '#111827' }}>+${pricing.serviceFee.toFixed(2)}</span>
+                  <span style={{ fontSize: '14px', color: '#62B794' }}>Service fee (5%)</span>
+                  <span style={{ fontSize: '14px', color: '#448383' }}>+${pricing.serviceFee.toFixed(2)}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid #e5e7eb' }}>
-                  <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827' }}>Total</span>
-                  <span style={{ fontSize: '18px', fontWeight: 700, color: '#16a34a' }}>${pricing.consumerTotal.toFixed(2)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid #8BD4B9' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600, color: '#448383' }}>Total</span>
+                  <span style={{ fontSize: '18px', fontWeight: 700, color: '#448383' }}>${pricing.consumerTotal.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -451,9 +458,9 @@ export default function ConsumerDashboard() {
                 onClick={handleClaim}
                 disabled={claiming}
                 style={{
-                  width: '100%', border: 'none', borderRadius: '10px',
-                  backgroundColor: claiming ? '#86efac' : '#16a34a',
-                  color: '#fff', fontSize: '14px', fontWeight: 600,
+                  width: '100%', border: 'none', borderRadius: '9999px',
+                  backgroundColor: claiming ? '#8BD4B9' : '#448383',
+                  color: '#ffffff', fontSize: '14px', fontWeight: 600,
                   padding: '12px', cursor: claiming ? 'not-allowed' : 'pointer',
                 }}
               >

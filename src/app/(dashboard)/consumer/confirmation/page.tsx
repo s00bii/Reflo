@@ -37,7 +37,7 @@ function StarRow({
   const [hovered, setHovered] = useState(0)
 
   return (
-    <div className="flex gap-2">
+    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
       {[1, 2, 3, 4, 5].map((n) => (
         <button
           key={n}
@@ -53,8 +53,7 @@ function StarRow({
             border: 'none',
             padding: '2px',
             cursor: disabled ? 'default' : 'pointer',
-            color: n <= (hovered || value) ? '#f59e0b' : '#d1d5db',
-            transition: 'color 0.1s',
+            color: n <= (hovered || value) ? '#E5B923' : '#8BD4B9',
           }}
           aria-label={`${n} stars`}
         >
@@ -130,81 +129,189 @@ function ConfirmationContent() {
     }
   }
 
-  if (loading) return <p className="text-gray-400 text-sm p-10">Loading...</p>
-  if (!claim) return <p className="text-gray-400 text-sm p-10">Claim not found</p>
+  if (loading) {
+    return (
+      <p style={{ color: '#62B794', fontSize: '14px', padding: '40px 24px' }}>Loading...</p>
+    )
+  }
+  if (!claim) {
+    return (
+      <p style={{ color: '#62B794', fontSize: '14px', padding: '40px 24px' }}>Claim not found</p>
+    )
+  }
 
   const oilValueTotal = claim.listings.price_base * claim.listings.volume_litres
   const serviceFee = claim.listings.price_base * claim.listings.volume_litres * 0.05
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-10">
-      <div className="text-center mb-8">
-        <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    <div style={{ backgroundColor: '#ffffff', maxWidth: '680px', margin: '0 auto', padding: '32px 24px' }}>
+      {/* Top bar */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px',
+        }}
+      >
+        <Link href="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
+          <img src="/logo.png" alt="Reflo" style={{ width: '52px', height: '52px', borderRadius: '50%', cursor: 'pointer' }} />
+        </Link>         <div
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            border: '2px solid #448383',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#448383" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
           </svg>
         </div>
-        <h1 className="text-2xl font-semibold text-gray-900">Order confirmed</h1>
-        <p className="text-gray-400 text-sm mt-1">
-          {new Date(claim.created_at).toLocaleString()}
+      </div>
+
+      <p
+        style={{
+          textAlign: 'center',
+          color: '#62B794',
+          fontSize: '16px',
+          marginBottom: '8px',
+        }}
+      >
+        Hey 👋
+      </p>
+      <h1
+        style={{
+          textAlign: 'center',
+          color: '#448383',
+          fontSize: '26px',
+          fontWeight: 700,
+          marginBottom: '24px',
+          lineHeight: 1.3,
+        }}
+      >
+        Thank you for your order! Below is your confirmation:
+      </h1>
+
+      {/* Order number bar */}
+      <div
+        style={{
+          backgroundColor: '#62B794',
+          borderRadius: '12px',
+          padding: '16px 24px',
+        }}
+      >
+        <p style={{ margin: 0, color: '#ffffff', fontWeight: 700, fontSize: '14px', textTransform: 'uppercase' }}>
+          Order #{shortId(claim.id)}
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-        <div className="bg-green-600 px-6 py-4">
-          <div className="flex justify-between items-center">
-            <p className="text-white text-sm font-medium">Order #{shortId(claim.id)}</p>
-          </div>
+      {/* Receipt */}
+      <div
+        style={{
+          backgroundColor: '#D1E8B0',
+          borderRadius: '12px',
+          padding: '20px 24px',
+          marginTop: '12px',
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <span style={{ fontWeight: 700, color: '#448383', fontSize: '13px', textTransform: 'uppercase' }}>Oil value</span>
+          <span style={{ color: '#448383', fontSize: '14px' }}>${oilValueTotal.toFixed(2)}</span>
         </div>
-
-        <div className="px-6 py-5 flex flex-col gap-3">
-          <div className="border-t border-gray-100 pt-3 flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-500">Oil value</span>
-              <span className="text-sm text-gray-900">${oilValueTotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-500">Service fee (5%)</span>
-              <span className="text-sm text-gray-900">+${serviceFee.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between pt-2 border-t border-gray-100">
-              <span className="text-sm font-semibold text-gray-900">Total</span>
-              <span className="text-lg font-bold text-green-600">${claim.final_price.toFixed(2)}</span>
-            </div>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <span style={{ fontWeight: 700, color: '#448383', fontSize: '13px', textTransform: 'uppercase' }}>Service fee (5%)</span>
+          <span style={{ color: '#448383', fontSize: '14px' }}>+${serviceFee.toFixed(2)}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <span style={{ fontWeight: 700, color: '#448383', fontSize: '15px', textTransform: 'uppercase' }}>Total:</span>
+          <span style={{ color: '#448383', fontSize: '22px', fontWeight: 800 }}>${claim.final_price.toFixed(2)}</span>
         </div>
       </div>
 
-      {/* Rating section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-6">
+      {/* Rating */}
+      <div
+        style={{
+          backgroundColor: '#ffffff',
+          border: '1.5px solid #8BD4B9',
+          borderRadius: '16px',
+          padding: '20px',
+          marginTop: '16px',
+        }}
+      >
         {existingRating && !thanks ? (
           <div>
-            <p className="text-sm font-medium text-gray-900 mb-2">Your rating</p>
-            <div className="flex items-center gap-2 text-amber-400 text-xl mb-2">
-              <StarRow value={existingRating.stars} onSelect={() => {}} disabled />
-            </div>
+            <p style={{ fontWeight: 700, color: '#448383', marginBottom: '8px' }}>Your rating</p>
+            <StarRow value={existingRating.stars} onSelect={() => {}} disabled />
             {existingRating.comment && (
-              <p className="text-sm text-gray-600 italic">&ldquo;{existingRating.comment}&rdquo;</p>
+              <p style={{ color: '#62B794', fontSize: '14px', fontStyle: 'italic', marginTop: '8px' }}>
+                &ldquo;{existingRating.comment}&rdquo;
+              </p>
             )}
           </div>
         ) : thanks ? (
-          <p className="text-green-600 font-medium text-sm">Thanks for your rating!</p>
+          <p style={{ color: '#448383', fontWeight: 600, fontSize: '14px', margin: 0 }}>Thanks for your rating!</p>
         ) : (
           <>
-            <p className="text-sm font-medium text-gray-900 mb-3">Rate this order</p>
-            <StarRow value={stars} onSelect={setStars} />
-            <textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="How was the oil quality?"
-              rows={3}
-              className="mt-3 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-400 resize-none"
-            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: '20px',
+              }}
+            >
+              <div style={{ flex: '1 1 200px', minWidth: '180px' }}>
+                <p style={{ fontWeight: 700, color: '#448383', fontSize: '12px', textTransform: 'uppercase', margin: '0 0 8px' }}>
+                  Rate this order from:
+                </p>
+                <p style={{ color: '#62B794', fontSize: '14px', margin: '0 0 12px' }}>Your supplier</p>
+                <StarRow value={stars} onSelect={setStars} />
+              </div>
+              <div style={{ flex: '1 1 200px', minWidth: '180px' }}>
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="How was the oil quality? Feel free to write a review."
+                  rows={4}
+                  style={{
+                    backgroundColor: '#D1E8B0',
+                    borderRadius: '12px',
+                    border: 'none',
+                    padding: '12px 16px',
+                    color: '#448383',
+                    fontSize: '14px',
+                    outline: 'none',
+                    width: '100%',
+                    resize: 'none',
+                    fontStyle: 'italic',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+            </div>
             <button
               type="button"
               onClick={handleSubmitRating}
               disabled={submitting || stars < 1}
-              className="mt-4 w-full py-2.5 rounded-lg text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{
+                marginTop: '16px',
+                width: '100%',
+                border: 'none',
+                borderRadius: '9999px',
+                padding: '12px 28px',
+                fontSize: '14px',
+                fontWeight: 600,
+                cursor: submitting || stars < 1 ? 'not-allowed' : 'pointer',
+                backgroundColor: '#448383',
+                color: '#ffffff',
+                opacity: submitting || stars < 1 ? 0.6 : 1,
+              }}
             >
               {submitting ? 'Submitting...' : 'Submit rating'}
             </button>
@@ -212,29 +319,39 @@ function ConfirmationContent() {
         )}
       </div>
 
-      <div className="bg-amber-50 border border-amber-100 rounded-xl p-5 mb-6">
-        <p className="text-sm font-medium text-amber-800">Order placed — supplier will prepare your oil for pickup</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '32px', flexWrap: 'wrap', gap: '16px' }}>
+        <Link
+          href="/consumer"
+          style={{
+            fontWeight: 700,
+            fontSize: '13px',
+            color: '#448383',
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+          }}
+        >
+          ← Back to listings
+        </Link>
+        <Link
+          href="/consumer/orders"
+          style={{
+            fontWeight: 700,
+            fontSize: '13px',
+            color: '#448383',
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+          }}
+        >
+          View all orders
+        </Link>
       </div>
-
-      <Link
-        href="/consumer/orders"
-        className="w-full block text-center bg-green-600 text-white rounded-lg py-3 text-sm font-medium hover:bg-green-700 mb-3"
-      >
-        View all orders
-      </Link>
-      <Link
-        href="/consumer"
-        className="w-full block text-center border border-gray-200 text-gray-600 rounded-lg py-3 text-sm font-medium hover:border-gray-400"
-      >
-        Back to listings
-      </Link>
     </div>
   )
 }
 
 export default function ConfirmationPage() {
   return (
-    <Suspense fallback={<p className="text-gray-400 text-sm p-10">Loading...</p>}>
+    <Suspense fallback={<p style={{ color: '#62B794', fontSize: '14px', padding: '40px 24px' }}>Loading...</p>}>
       <ConfirmationContent />
     </Suspense>
   )

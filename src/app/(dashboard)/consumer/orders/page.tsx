@@ -30,13 +30,6 @@ function shortId(id: string) {
   return id.replace(/-/g, '').substring(0, 8).toUpperCase()
 }
 
-const statusStyles: Record<string, string> = {
-  active: 'bg-gray-100 text-gray-700',
-  claimed: 'bg-amber-100 text-amber-800',
-  confirmed: 'bg-blue-100 text-blue-800',
-  completed: 'bg-green-100 text-green-800',
-}
-
 export default async function ConsumerOrdersPage() {
   noStore()
 
@@ -44,7 +37,6 @@ export default async function ConsumerOrdersPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Avoid nested embed — it can fail if FK hint/RLS on listings differs from direct select
   const { data: claimsData, error: claimsError } = await supabase
     .from('claims')
     .select('id, status, created_at, final_price, listing_id')
@@ -87,67 +79,160 @@ export default async function ConsumerOrdersPage() {
     }
   }
 
+  const profileIcon = (
+    <div
+      style={{
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        border: '2px solid #448383',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+      }}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#448383" strokeWidth="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    </div>
+  )
+
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Your orders</h1>
-        <p className="text-gray-500 text-sm mt-1">All your claims and ratings</p>
+    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh' }}>
+
+      {/* Header with forest background */}
+      <div style={{ position: 'relative', width: '100%', height: '240px', overflow: 'hidden' }}>
+        <img
+          src="/forest.png"
+          alt=""
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            height: '240px',
+            objectFit: 'cover',
+            objectPosition: 'center top',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.85,
+            transform: 'scaleY(-1)'
+          }}
+        />
+        {/* Top bar */}
+        <div style={{
+          position: 'absolute', top: 16, left: 24, right: 24,
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          zIndex: 1,
+        }}>
+        <Link href="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
+          <img src="/logo.png" alt="Reflo" style={{ width: '52px', height: '52px', borderRadius: '50%', cursor: 'pointer' }} />
+        </Link>          {profileIcon}
+        </div>
+        {/* Greeting bottom left */}
+        <div style={{ position: 'absolute', bottom: 20, left: 24, zIndex: 1 }}>
+          <h1 style={{ fontSize: '26px', fontWeight: 700, color: '#448383', margin: '0 0 4px' }}>
+            Hey 👋
+          </h1>
+          <p style={{ fontSize: '14px', color: '#62B794', margin: 0 }}>Your orders</p>
+        </div>
+        {/* Back link bottom right */}
+        <div style={{ position: 'absolute', bottom: 20, right: 24, zIndex: 1 }}>
+          <Link
+            href="/consumer"
+            style={{
+              fontWeight: 700, fontSize: '13px', color: '#448383',
+              textDecoration: 'none', textTransform: 'uppercase',
+            }}
+          >
+            ← Back to listings
+          </Link>
+        </div>
       </div>
 
+      <div style={{ padding: '16px 24px 40px' }}>
+
       {claimsError && (
-        <p className="text-red-600 text-sm mb-4" role="alert">
-          Could not load orders. Check Supabase RLS allows <code className="bg-red-50 px-1 rounded">select</code> on{' '}
-          <code className="bg-red-50 px-1 rounded">claims</code> for your user.
+        <p style={{ color: '#448383', fontSize: '14px', marginBottom: '16px' }} role="alert">
+          Could not load orders. Check Supabase RLS allows select on claims for your user.
         </p>
       )}
 
       {rows.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-lg">No orders yet</p>
-          <p className="text-sm mt-1">Claim a listing to see it here</p>
+        <div style={{ textAlign: 'center', color: '#62B794', padding: '48px 0' }}>
+          <p style={{ fontSize: '18px', color: '#448383', margin: '0 0 8px' }}>No orders yet</p>
+          <p style={{ fontSize: '14px', margin: 0 }}>Claim a listing to see it here</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
           {rows.map((claim) => {
             const listing = listingsById.get(claim.listing_id)
             const rating = ratingsByClaim.get(claim.id)
-            const badgeClass = statusStyles[claim.status] ?? 'bg-gray-100 text-gray-700'
             return (
-              <div key={claim.id} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="font-medium text-gray-900">Order #{shortId(claim.id)}</p>
-                    <p className="text-sm text-gray-600 mt-1">
+              <div
+                key={claim.id}
+                style={{
+                  backgroundColor: '#D1E8B0',
+                  borderRadius: '16px',
+                  border: 'none',
+                  padding: '20px 24px',
+                  marginBottom: '12px',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontWeight: 700, color: '#448383', fontSize: '16px', margin: '0 0 4px' }}>
                       {listing?.volume_litres ?? 0}L · {listing?.address ?? '—'}
                     </p>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p style={{ fontSize: '13px', color: '#62B794', margin: 0 }}>
                       {new Date(claim.created_at).toLocaleString()}
                     </p>
                   </div>
-                  <div className="text-right flex flex-col items-end gap-2">
-                    <span className={`text-xs font-medium px-3 py-1 rounded-full capitalize ${badgeClass}`}>
-                      {claim.status}
-                    </span>
-                    <p className="text-green-600 font-semibold">${claim.final_price.toFixed(2)}</p>
-                  </div>
+                  <span
+                    style={{
+                      fontWeight: 700,
+                      color: '#448383',
+                      fontSize: '13px',
+                      textTransform: 'uppercase',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {claim.status}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+                  <p style={{ fontWeight: 700, color: '#448383', fontSize: '18px', margin: 0 }}>
+                    ${claim.final_price.toFixed(2)}
+                  </p>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100">
+                <div style={{ marginTop: '12px' }}>
                   {rating ? (
                     <div>
-                      <p className="text-amber-500 text-sm font-medium">
-                        ★ {rating.stars}/5
+                      <p style={{ fontSize: '14px', fontWeight: 600, color: '#448383', margin: 0 }}>
+                        <span style={{ color: '#E5B923' }}>★</span> {rating.stars}/5
                       </p>
                       {rating.comment && (
-                        <p className="text-sm text-gray-600 mt-1 italic">&ldquo;{rating.comment}&rdquo;</p>
+                        <p style={{ fontSize: '14px', color: '#62B794', fontStyle: 'italic', margin: '8px 0 0' }}>
+                          &ldquo;{rating.comment}&rdquo;
+                        </p>
                       )}
                     </div>
                   ) : (
                     <Link
                       href={`/consumer/confirmation?claimId=${claim.id}`}
-                      className="inline-block text-sm font-medium text-amber-600 hover:text-amber-700"
+                      style={{
+                        fontSize: '14px',
+                        fontWeight: 700,
+                        color: '#448383',
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                      }}
                     >
-                      View this order
+                      Rate this order →
                     </Link>
                   )}
                 </div>
@@ -156,6 +241,8 @@ export default async function ConsumerOrdersPage() {
           })}
         </div>
       )}
+      
+      </div>
     </div>
   )
 }
